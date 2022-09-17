@@ -1,0 +1,52 @@
+<html lang="en-US">
+
+<head>
+  <title>SINOVATE - Web clientside example</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="author" content="xtdevcoin">
+  <meta name="description" content="Tools for Blockchain">
+  <script src="./bitcore-lib.min.js" type="text/javascript"></script>
+  <script src="./jquery-3.2.1.js" type="text/javascript"></script>
+</head>
+
+<body>
+  Address: <div id="address"></div>
+  privateKey: <div id="privateKey"></div>
+  privateKeyWIF: <div id="exported"></div>
+  Raw Transaction: <div id="rawtx"></div>
+  Transaction ID: <div id="txid"></div>
+
+  <script type="text/javascript">
+    var bitcore = require('bitcore-lib');
+    var privateKey = new bitcore.PrivateKey('e9525e276035fe72a5cbb363cc43d4be21a739b84fefac6aeaa4683519b83397');
+    var address = privateKey.toAddress();
+    var exported = privateKey.toWIF();
+
+    /*SQsrMpzRq5yhj6Gbjw7gWAbUBS3ztn68z1*/
+    $('#address').html(address.toString());
+    $('#privateKey').html(privateKey.toString());
+    $('#exported').html(exported.toString());
+
+    var utxo = {
+      "txId": "f5180b29104522376a6d4fb42b37c659c8430058db15438208524534ad8b75d0",
+      "outputIndex": 1,
+      "address": "SjJKaTRFccC5Desf6bNxM4YzpkSXVaCw8L",
+      "script": "76a914f1623f75fa536b80a9be220323de38c1f2c6bb6488ac",
+      "satoshis": 50000
+    };
+
+
+    var transaction = new bitcore.Transaction()
+      .from(utxo)
+      .to('SNKLxH27tSYrwH1Djqqn5TXiahf2Z8teaY', 100000000)
+      .change('SjJKaTRFccC5Desf6bNxM4YzpkSXVaCw8L')
+      .sign(exported)
+      .feePerKb(20000);
+
+    console.log(transaction.serialize());
+    $('#rawtx').html(transaction.toString());
+  </script>
+</body>
+
+</html>
